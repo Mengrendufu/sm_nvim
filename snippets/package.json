@@ -1,0 +1,25 @@
+{
+  "name": "sm_snippets",
+  "contributes": {
+    "snippets": [
+      {
+        "language": "lua",
+        "path": "./lua.json"
+      },
+      {
+        "language": "c",
+        "path": "./c.json"
+      },
+      {
+        "language": "rust",
+        "path": "./rust.json"
+      },
+      {
+        "language": "jsonc",
+        "path": "./jsonc.json"
+      }
+    ]
+  }
+}
+
+
