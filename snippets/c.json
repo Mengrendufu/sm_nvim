@@ -2,7 +2,15 @@
     "qwtfpl": {
         "prefix": "qwtfpl_",
         "body": [
-            "//============================================================================\n// Copyright (C) 2026 Sunny Matato                                            \n//\n// This program is free software. It comes without any warranty, to           \n// the extent permitted by applicable law. You can redistribute it            \n// and/or modify it under the terms of the Do What The Fuck You Want          \n// To Public License, Version 2, as published by Sam Hocevar.                 \n// See http://www.wtfpl.net/ for more details.                                \n//============================================================================"
+            "//============================================================================",
+            "// Copyright (C) 2026 Sunny Matato",
+            "//",
+            "// This program is free software. It comes without any warranty, to",
+            "// the extent permitted by applicable law. You can redistribute it",
+            "// and/or modify it under the terms of the Do What The Fuck You Want",
+            "// To Public License, Version 2, as published by Sam Hocevar.",
+            "// See http://www.wtfpl.net/ for more details.",
+            "//============================================================================"
         ]
     },
     "qmodule": {
@@ -16,5 +24,20 @@
         "body": [
             "//............................................................................"
         ]
+    },
+    "SM HSM State Definition": {
+        "prefix": "smstate",
+        "body": [
+           "static SM_RetState ${1:Class}_${2:State}_(${1} * const me, ${3:EvtType} const * const e) SM_HSM_RETT;",
+           "SM_HsmState SM_HSM_ROM ${1}_${2} = {",
+           "    (SM_StatePtr)&${1}_${4:SuperState},              // super",
+           "    (SM_InitHandler)&${1}_${2}_init_,    // init_",
+           "    (SM_ActionHandler)&${1}_${2}_entry_, // entry_",
+           "    (SM_ActionHandler)&${1}_${2}_exit_,  // exit_",
+           "    (SM_StateHandler)&${1}_${2}_         // handler",
+           "};",
+           "$0"
+        ],
+        "description": "Generate SM HSM State boilerplate"
     }
 }
