@@ -109,9 +109,10 @@ return {
             -- Tab 键行为
             ["<Tab>"] = cmp.mapping(function(fallback)
                 if cmp.visible() then
-                cmp.select_next_item()
+                    -- cmp.select_next_item()
                 elseif luasnip.expand_or_jumpable() then
                 luasnip.expand_or_jump()
+                -- 保留原先行为：不自动高亮。用户可用手动映射触发高亮选择。
                 else
                 fallback()
                 end
@@ -120,7 +121,7 @@ return {
             -- Shift-Tab 键行为
             ["<S-Tab>"] = cmp.mapping(function(fallback)
                 if cmp.visible() then
-                cmp.select_prev_item()
+                    -- cmp.select_prev_item()
                 elseif luasnip.jumpable(-1) then
                 luasnip.jump(-1)
                 else
@@ -151,6 +152,18 @@ return {
             { name = "buffer" },
             },
         })
+
+        -- 为手动高亮选择提供一个默认映射：在插入/普通模式按 <C-l>
+        pcall(function()
+            vim.keymap.set({'i','n'}, '<C-l>', function()
+                local ok, sel = pcall(require, 'config.luasnip_select')
+                if ok and sel and sel.manual_select then
+                    sel.manual_select()
+                end
+            end, {silent = true, desc = 'LuaSnip: manual visual select of ampersand name'})
+        end)
+
         end,
     },
 }
+
