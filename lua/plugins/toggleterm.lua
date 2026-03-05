@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 -- lua/plugins/toggleterm.lua
 return {
   "akinsho/toggleterm.nvim",

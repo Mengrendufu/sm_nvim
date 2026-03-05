@@ -156,7 +156,7 @@ return {
         -- 为手动高亮选择提供一个默认映射：在插入/普通模式按 <C-l>
         pcall(function()
             vim.keymap.set({'i','n'}, '<C-l>', function()
-                local ok, sel = pcall(require, 'config.luasnip_select')
+                local ok, sel = pcall(require, 'config.sm_snippets')
                 if ok and sel and sel.manual_select then
                     sel.manual_select()
                 end

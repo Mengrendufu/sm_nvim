@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 -- lua/plugins/gitsigns.lua
 return {
     "lewis6991/gitsigns.nvim",

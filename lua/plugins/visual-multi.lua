@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 -- 多光标编辑插件：mg979/vim-visual-multi
 return {
   "mg979/vim-visual-multi",

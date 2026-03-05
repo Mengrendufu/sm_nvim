@@ -13,7 +13,7 @@ require("config.lazy")
 require("config.keymaps")
 require("config.autosaveformat")
 require("config.tabline")
--- require("config.sm_snippets")
+require("config.sm_snippets")
 
 -- Filetype configuration ====================================================
 vim.filetype.add({

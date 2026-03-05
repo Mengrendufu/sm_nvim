@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 -- 原生标签页（tabpage）风格的 tabline
 
 vim.opt.showtabline = 2

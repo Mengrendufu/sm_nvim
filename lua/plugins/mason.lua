@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 -- ============================================
 -- Mason - LSP/DAP/Linter/Formatter 安装管理器
 -- ============================================

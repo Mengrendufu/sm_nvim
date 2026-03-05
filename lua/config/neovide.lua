@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 -- NeoVide configurations ====================================================
 if vim.g.neovide then
     vim.o.linespace = 6
