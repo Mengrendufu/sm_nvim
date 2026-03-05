@@ -83,22 +83,18 @@ return {
                  vim.keymap.set("n", "<leader>cdl", vim.diagnostic.open_float, vim.tbl_extend("force", opts, { desc = "显示诊断详情" }))
                  vim.keymap.set("n", "<leader>cdq", vim.diagnostic.setloclist, vim.tbl_extend("force", opts, { desc = "诊断列表" }))
 
-                 -- Inlay-Hints.
-                 vim.keymap.set("n", "<leader>cih", function()
-                     local enabled
-                      -- Neovim 0.11+ 兼容方式
-                      if vim.fn.has('nvim-0.11') == 1 then
-                          local filter = { bufnr = bufnr }
-                          enabled = vim.lsp.inlay_hint.is_enabled(filter)
-                          vim.lsp.inlay_hint.enable(filter, not enabled)  -- 修复参数顺序：filter 在前
+                  -- Inlay-Hints (仅映射一遍，不嵌套)
+                  vim.keymap.set("n", "<leader>cih", function()
+                      if vim.fn.has("nvim-0.11") == 1 then
+                        local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
+                        vim.lsp.inlay_hint.enable(not enabled, { bufnr = bufnr })
+                        vim.notify("inlay hints: " .. (not enabled and "ON" or "OFF"))
                       else
-                          -- Neovim 0.10 方式
-                          enabled = vim.lsp.inlay_hint.is_enabled(bufnr)
-                          -- 注意：在 0.10 中，参数顺序是 (bufnr, enabled)
-                          vim.lsp.inlay_hint.enable(bufnr, not enabled)
+                        local enabled = vim.lsp.inlay_hint.is_enabled(bufnr)
+                        vim.lsp.inlay_hint.enable(bufnr, not enabled)
+                        vim.notify("inlay hints: " .. (not enabled and "ON" or "OFF"))
                       end
-                     vim.notify("clangd inlay hints: " .. (not enabled and "ON" or "OFF"))
-                 end, vim.tbl_extend("force", opts, { desc = "切换 inlay hints" }))
+                  end, vim.tbl_extend("force", opts, { desc = "切换 inlay hints" }))
 
                  -- C/C++ 特定快捷键
                  if client and client.name == "clangd" then
@@ -348,11 +344,9 @@ return {
         end
         end,
     },
-
-    -- JSON schemas 支持
     {
         "b0o/schemastore.nvim",
         lazy = true,
-    },
+    }
 }
 
