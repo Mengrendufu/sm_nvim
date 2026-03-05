@@ -30,10 +30,10 @@
         "body": [
            "static SM_RetState ${1:Class}_${2:State}_(${1} * const me, ${3:EvtType} const * const e) SM_HSM_RETT;",
            "SM_HsmState SM_HSM_ROM ${1}_${2} = {",
-           "    (SM_StatePtr)&${1}_${4:SuperState},              // super",
-           "    (SM_InitHandler)&${1}_${2}_init_,    // init_",
-           "    (SM_ActionHandler)&${1}_${2}_entry_, // entry_",
-           "    (SM_ActionHandler)&${1}_${2}_exit_,  // exit_",
+           "    (SM_StatePtr)${4:&${1}_${5:SuperState}},              // super",
+           "    (SM_InitHandler)${6:&${1}_${2}_init_},    // init_",
+           "    (SM_ActionHandler)${7:&${1}_${2}_entry_}, // entry_",
+           "    (SM_ActionHandler)${8:&${1}_${2}_exit_},  // exit_",
            "    (SM_StateHandler)&${1}_${2}_         // handler",
            "};",
            "$0"
