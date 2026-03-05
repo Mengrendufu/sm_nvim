@@ -25,8 +25,8 @@
             "//............................................................................"
         ]
     },
-    "SM HSM State Definition": {
-        "prefix": "smstate",
+    "qsm": {
+        "prefix": "qsm",
         "body": [
            "static SM_RetState ${1:Class}_${2:State}_(${1} * const me, ${3:EvtType} const * const e) SM_HSM_RETT;",
            "SM_HsmState SM_HSM_ROM ${1}_${2} = {",
@@ -38,6 +38,6 @@
            "};",
            "$0"
         ],
-        "description": "Generate SM HSM State boilerplate"
+        "description": "Generate Sm_Hsm State boilerplate"
     }
 }
