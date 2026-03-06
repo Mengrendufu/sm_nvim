@@ -29,21 +29,33 @@ return {
         require('illuminate').configure(opts)
 
         -- ========== 多组跨 buffer 高亮 ==========
-        -- 最多同时 pin 6 个词，每组独立颜色，支持 toggle（再次 pin 同一词则取消）
+        -- 最多同时 pin 16 个词，每组独立颜色，支持 toggle（再次 pin 同一词则取消）
 
-        -- 6 种高亮组，依次轮换
+        -- 16 种高亮组，依次轮换
         local HL_GROUPS = {
-            'MultiHL1', 'MultiHL2', 'MultiHL3',
-            'MultiHL4', 'MultiHL5', 'MultiHL6',
+            'MultiHL1',  'MultiHL2',  'MultiHL3',  'MultiHL4',
+            'MultiHL5',  'MultiHL6',  'MultiHL7',  'MultiHL8',
+            'MultiHL9',  'MultiHL10', 'MultiHL11', 'MultiHL12',
+            'MultiHL13', 'MultiHL14', 'MultiHL15', 'MultiHL16',
         }
         -- 对应颜色（bg 仅在 guibg 生效；termguicolors 需开启）
         local HL_COLORS = {
-            { bg = '#804040', fg = '#ffcccc' }, -- 红
-            { bg = '#405880', fg = '#cce0ff' }, -- 蓝
-            { bg = '#407840', fg = '#ccffcc' }, -- 绿
-            { bg = '#806840', fg = '#ffe8cc' }, -- 橙
-            { bg = '#604080', fg = '#e8ccff' }, -- 紫
-            { bg = '#407878', fg = '#ccffff' }, -- 青
+            { bg = '#803030', fg = '#ffcccc' }, -- 红
+            { bg = '#305080', fg = '#cce0ff' }, -- 蓝
+            { bg = '#307830', fg = '#ccffcc' }, -- 绿
+            { bg = '#806030', fg = '#ffe8cc' }, -- 橙
+            { bg = '#583080', fg = '#e8ccff' }, -- 紫
+            { bg = '#307878', fg = '#ccffff' }, -- 青
+            { bg = '#807030', fg = '#fff5cc' }, -- 黄
+            { bg = '#803060', fg = '#ffcce8' }, -- 粉
+            { bg = '#304060', fg = '#cce0f0' }, -- 深蓝
+            { bg = '#406030', fg = '#d8f0cc' }, -- 草绿
+            { bg = '#703030', fg = '#f0d0d0' }, -- 暗红
+            { bg = '#306050', fg = '#ccf0e8' }, -- 松绿
+            { bg = '#605030', fg = '#f0e8cc' }, -- 棕
+            { bg = '#503060', fg = '#e0ccf0' }, -- 深紫
+            { bg = '#306068', fg = '#ccecf0' }, -- 冰蓝
+            { bg = '#486030', fg = '#e0f0cc' }, -- 橄榄
         }
 
         -- 初始化高亮组
@@ -114,7 +126,7 @@ return {
                 end
             end
             if not gi then
-                vim.notify('多组高亮已满（最多 6 组），请先用 <leader>sc 清除', vim.log.levels.WARN)
+                vim.notify('多组高亮已满（最多 16 组），请先用 <leader>sc 清除', vim.log.levels.WARN)
                 return
             end
             next_group = (gi % #HL_GROUPS) + 1

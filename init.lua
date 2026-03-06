@@ -56,6 +56,7 @@ vim.opt.ignorecase = true          -- 搜索时忽略大小写
 vim.opt.smartcase = true           -- 如果包含大写字母则区分大小写
 vim.opt.hlsearch = true            -- 高亮搜索结果
 vim.opt.incsearch = true           -- 增量搜索
+vim.opt.inccommand = 'nosplit'     -- 实时预览替换结果（:s 时高亮匹配）
 
 vim.opt.termguicolors = true       -- 启用真彩色
 vim.opt.mouse = "a"                -- 启用鼠标支持

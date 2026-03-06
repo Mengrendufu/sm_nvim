@@ -12,41 +12,16 @@ vim.keymap.set('i', '<C-l>', '<Right>', { desc = '右移' })
 vim.keymap.set('n', '<C-h>', '3zh', { desc = '视角左移' })
 vim.keymap.set('n', '<C-l>', '3zl', { desc = '视角右移' })
 
--- 定义 Substitute 函数
 local function Substitute()
-    -- 获取光标下的单词 (Current Word)
-    local target = vim.fn.expand("<cword>")
-
-    if target == "" then
-        vim.notify("光标下未发现有效单词", vim.log.levels.WARN)
+    local target = vim.fn.expand('<cword>')
+    if target == '' then
+        vim.notify('光标下未发现有效单词', vim.log.levels.WARN)
         return
     end
-
-    -- 调用交互式输入框
-    vim.ui.input({
-        prompt = '将 "' .. target .. '" 替换为: ',
-        default = "", -- 默认为空，方便直接输入新词
-    }, function(replacement)
-        -- 如果用户取消输入 (ESC) 或输入为空，则跳过
-        if not replacement or replacement == "" then
-            return
-        end
-
-        -- 构建替换指令
-        -- %s: 全局范围; /g: 行内全部替换; /e: 找不到时不报错
-        -- 使用 \V (very magic) 模式确保特殊字符被视为普通字符处理
-        local cmd = string.format("%%s/\\V%s/%s/ge", target, replacement)
-
-        -- 执行命令并捕获状态
-        local status, err = pcall(vim.api.nvim_command, cmd)
-
-        if status then
-            -- 获取受影响的行数（可选反馈）
-            vim.notify(string.format("已完成替换: %s -> %s", target, replacement), vim.log.levels.INFO)
-        else
-            vim.notify("替换执行出错: " .. err, vim.log.levels.ERROR)
-        end
-    end)
+    vim.api.nvim_feedkeys(
+        vim.api.nvim_replace_termcodes(':%s/' .. target .. '/', true, false, true),
+        'n', false
+    )
 end
 
 -- 映射快捷键 (使用 <leader>s 以匹配 Substitute 的首字母)
