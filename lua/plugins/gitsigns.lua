@@ -4,7 +4,7 @@ return {
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPre", "BufNewFile" }, -- 延迟加载，提高启动速度
     opts = {
-        watch_gitdir = { enable = false },
+        watch_gitdir = { interval = 1000, follow_files = true },
 
         -- 自定义图标，与你的 Neo-tree 风格保持一致
         signs = {
