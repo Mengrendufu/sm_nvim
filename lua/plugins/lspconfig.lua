@@ -149,7 +149,7 @@ return {
          vim.lsp.config('lua_ls', {
              cmd = { 'lua-language-server' },
              filetypes = { 'lua' },
-             root_dir = require('lspconfig.util').root_pattern('.luarc.json', '.luarc.jsonc', '.git'),
+             root_markers = { '.luarc.json', '.luarc.jsonc', '.git' },
              capabilities = capabilities,
              -- 悬浮窗口边框配置
              handlers = {
@@ -196,30 +196,28 @@ return {
                 '--compile-commands-dir=build',
             },
             filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto' },
-            root_dir = require('lspconfig.util').root_pattern(
+            root_markers = {
                 '.clangd',
                 '.clang-tidy',
                 '.clang-format',
                 'compile_commands.json',
                 'compile_flags.txt',
                 'configure.ac',
-                '.git'
-            ),
+                '.git',
+            },
             capabilities = capabilities,
-             handlers = {
-                 ["textDocument/hover"] = function(...)
-                     return vim.lsp.handlers.hover(..., { border = "rounded" })
-                 end,
-                 ["textDocument/signatureHelp"] = function(...)
-                     return vim.lsp.handlers.signature_help(..., { border = "rounded" })
-                 end,
-             },
-            settings = {
-                init_options = {
-                    usePlaceholders = true,
-                    completeUnimported = true,
-                    clangdFileStatus = true,
-                },
+            handlers = {
+                ["textDocument/hover"] = function(...)
+                    return vim.lsp.handlers.hover(..., { border = "rounded" })
+                end,
+                ["textDocument/signatureHelp"] = function(...)
+                    return vim.lsp.handlers.signature_help(..., { border = "rounded" })
+                end,
+            },
+            init_options = {
+                usePlaceholders = true,
+                completeUnimported = true,
+                clangdFileStatus = true,
             },
         })
 
@@ -227,7 +225,7 @@ return {
         vim.lsp.config('pyright', {
             cmd = { 'pyright-langserver', '--stdio' },
             filetypes = { 'python' },
-            root_dir = require('lspconfig.util').root_pattern('pyproject.toml', 'setup.py', 'setup.cfg', 'requirements.txt', 'Pipfile', '.git'),
+            root_markers = { 'pyproject.toml', 'setup.py', 'setup.cfg', 'requirements.txt', 'Pipfile', '.git' },
             capabilities = capabilities,
              settings = {
                  python = {
@@ -244,7 +242,7 @@ return {
         vim.lsp.config('ts_ls', {
             cmd = { 'typescript-language-server', '--stdio' },
             filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
-            root_dir = require('lspconfig.util').root_pattern('package.json', 'tsconfig.json', 'jsconfig.json', '.git'),
+            root_markers = { 'package.json', 'tsconfig.json', 'jsconfig.json', '.git' },
             capabilities = capabilities,
         })
 
@@ -252,7 +250,7 @@ return {
 vim.lsp.config('html', {
                 cmd = { 'vscode-html-language-server', '--stdio' },
                 filetypes = { 'html' },
-                root_dir = require('lspconfig.util').root_pattern('package.json', '.git'),
+                root_markers = { 'package.json', '.git' },
                 capabilities = capabilities,
         })
 
@@ -260,7 +258,7 @@ vim.lsp.config('html', {
 vim.lsp.config('cssls', {
                 cmd = { 'vscode-css-language-server', '--stdio' },
                 filetypes = { 'css', 'scss', 'less' },
-                root_dir = require('lspconfig.util').root_pattern('package.json', '.git'),
+                root_markers = { 'package.json', '.git' },
                 capabilities = capabilities,
         })
 
@@ -268,7 +266,7 @@ vim.lsp.config('cssls', {
 vim.lsp.config('jsonls', {
                 cmd = { 'vscode-json-language-server', '--stdio' },
                 filetypes = { 'json', 'jsonc' },
-                root_dir = require('lspconfig.util').root_pattern('package.json', '.git'),
+                root_markers = { 'package.json', '.git' },
                 capabilities = capabilities,
              settings = {
                  json = {
@@ -280,13 +278,9 @@ vim.lsp.config('jsonls', {
 
          -- Rust (Rust-analyzer)
          vim.lsp.config('rust_analyzer', {
-            cmd = { 'rust-analyzer' },  -- 需要确保在 PATH 中
+            cmd = { 'rust-analyzer' },
             filetypes = { 'rust', 'rs' },
-            root_dir = require('lspconfig.util').root_pattern(
-                'Cargo.toml',
-                'rust-project.json',
-                '.git'
-            ),
+            root_markers = { 'Cargo.toml', 'rust-project.json', '.git' },
             capabilities = capabilities,
              settings = {
                  ["rust-analyzer"] = {
