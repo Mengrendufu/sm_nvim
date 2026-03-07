@@ -84,17 +84,11 @@ return {
                  vim.keymap.set("n", "<leader>cdq", vim.diagnostic.setloclist, vim.tbl_extend("force", opts, { desc = "诊断列表" }))
 
                   -- Inlay-Hints (仅映射一遍，不嵌套)
-                  vim.keymap.set("n", "<leader>cih", function()
-                      if vim.fn.has("nvim-0.11") == 1 then
-                        local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
-                        vim.lsp.inlay_hint.enable(not enabled, { bufnr = bufnr })
-                        vim.notify("inlay hints: " .. (not enabled and "ON" or "OFF"))
-                      else
-                        local enabled = vim.lsp.inlay_hint.is_enabled(bufnr)
-                        vim.lsp.inlay_hint.enable(bufnr, not enabled)
-                        vim.notify("inlay hints: " .. (not enabled and "ON" or "OFF"))
-                      end
-                  end, vim.tbl_extend("force", opts, { desc = "切换 inlay hints" }))
+                   vim.keymap.set("n", "<leader>cih", function()
+                       local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
+                       vim.lsp.inlay_hint.enable(not enabled, { bufnr = bufnr })
+                       vim.notify("inlay hints: " .. (not enabled and "ON" or "OFF"))
+                   end, vim.tbl_extend("force", opts, { desc = "切换 inlay hints" }))
 
                  -- C/C++ 特定快捷键
                  if client and client.name == "clangd" then
@@ -116,7 +110,6 @@ return {
                      end, vim.tbl_extend("force", opts, { desc = "切换头文件/源文件" }))
                  end
 
-                 -- 高亮当前符号（使用新的方法调用方式）
                  if client and client:supports_method("textDocument/documentHighlight") then
                      local highlight_augroup = vim.api.nvim_create_augroup("lsp_document_highlight", { clear = false })
                      vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
@@ -124,10 +117,20 @@ return {
                          group = highlight_augroup,
                          callback = vim.lsp.buf.document_highlight,
                      })
-                     vim.api.nvim_create_autocmd("CursorMoved", {
+                     vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
                          buffer = bufnr,
                          group = highlight_augroup,
                          callback = vim.lsp.buf.clear_references,
+                     })
+                     vim.api.nvim_create_autocmd("LspDetach", {
+                         group = vim.api.nvim_create_augroup("lsp_document_highlight_detach", { clear = true }),
+                         callback = function(detach_args)
+                             vim.lsp.buf.clear_references()
+                             vim.api.nvim_clear_autocmds({
+                                 group = "lsp_document_highlight",
+                                 buffer = detach_args.buf,
+                             })
+                         end,
                      })
                  end
              end,

@@ -41,6 +41,7 @@ return {
                     gitsigns = true,
                     nvimtree = true,
                     treesitter = true,
+                    semantic_tokens = true,  -- LSP semantic token 着色
                     notify = false,
                     mini = {
                         enabled = true,
