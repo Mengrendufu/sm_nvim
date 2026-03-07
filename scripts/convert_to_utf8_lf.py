@@ -41,7 +41,19 @@ SKIP_DIRS = {".git", ".svn", ".hg", "__pycache__", "node_modules", ".venv", "ven
 
 # ─────────────────────────── interactive picker ──────────────────────────────
 
-def _pick_dirs_curses(stdscr, dirs: list[str]) -> list[str]:
+def _can_use_curses() -> bool:
+    if not (sys.stdin.isatty() and sys.stdout.isatty()):
+        return False
+    try:
+        import curses  # noqa: F401
+        return True
+    except ImportError:
+        return False
+
+
+def _pick_dirs_curses_screen(stdscr, dirs: list[str]) -> list[str]:
+    import curses
+
     curses.curs_set(0)
     curses.use_default_colors()
     curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_CYAN)   # highlighted row
@@ -115,6 +127,56 @@ def _pick_dirs_curses(stdscr, dirs: list[str]) -> list[str]:
     return [dirs[i] for i, v in enumerate(checked) if v]
 
 
+def _pick_dirs_curses(dirs: list[str]) -> list[str]:
+    import curses
+
+    try:
+        return curses.wrapper(_pick_dirs_curses_screen, dirs)
+    except KeyboardInterrupt:
+        return []
+
+
+def _pick_dirs_numbered(dirs: list[str]) -> list[str] | None:
+    print("Subdirectories found:")
+    for i, d in enumerate(dirs, 1):
+        print(f"  {i:>3}.  {d}")
+    print()
+    print("Tip: install 'windows-curses' (pip install windows-curses) for an interactive UI.")
+    print("Enter numbers separated by commas, 'all', 'none', or press Enter to cancel.")
+
+    while True:
+        try:
+            raw = input("Selection: ").strip()
+        except (EOFError, KeyboardInterrupt):
+            return None
+
+        if raw == "" or raw.lower() == "none":
+            return None
+        if raw.lower() == "all":
+            return list(dirs)
+
+        parts = [p.strip() for p in raw.split(",") if p.strip()]
+        selected: list[str] = []
+        invalid = False
+        for part in parts:
+            if part.isdigit():
+                idx = int(part) - 1
+                if 0 <= idx < len(dirs):
+                    if dirs[idx] not in selected:
+                        selected.append(dirs[idx])
+                else:
+                    print(f"  Invalid number: {part} (valid range: 1-{len(dirs)})")
+                    invalid = True
+                    break
+            else:
+                print(f"  Not a number: '{part}'")
+                invalid = True
+                break
+
+        if not invalid:
+            return selected
+
+
 def pick_subdirs(root: Path) -> list[str] | None:
     """
     List immediate subdirectories of *root* (excluding SKIP_DIRS),
@@ -122,7 +184,7 @@ def pick_subdirs(root: Path) -> list[str] | None:
 
     Returns:
         list of selected dir names — may be empty if user selected none.
-        None if the user cancelled (q / Esc) or there are no subdirs.
+        None if the user cancelled or there are no subdirs.
     """
     subdirs = sorted(
         d.name
@@ -132,12 +194,9 @@ def pick_subdirs(root: Path) -> list[str] | None:
     if not subdirs:
         return None
 
-    try:
-        selected = curses.wrapper(_pick_dirs_curses, subdirs)
-    except KeyboardInterrupt:
-        return None
-
-    return selected
+    if _can_use_curses():
+        return _pick_dirs_curses(subdirs)
+    return _pick_dirs_numbered(subdirs)
 
 
 # ──────────────────────────── core conversion ────────────────────────────────
