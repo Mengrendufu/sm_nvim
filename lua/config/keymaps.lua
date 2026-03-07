@@ -50,9 +50,3 @@ vim.keymap.set('n', '<leader>fs', ':w<CR>', { desc = '保存文件', silent = tr
 -- Fast quit.
 vim.keymap.set('n', '<leader>q', ':q<CR>', { desc = ' 退出 [原生]' , silent = true})
 vim.keymap.set('n', '<leader>Q', ':qa!<CR>', { desc = ' 强制退出所有 [原生]' , silent = true})
-
--- Fast move.
-vim.keymap.set('n', '<leader>k', '<C-w>l', { desc = ' 移动到上方窗口 [原生]' , silent = true})
-vim.keymap.set('n', '<leader>j', '<C-w>l', { desc = ' 移动到下方窗口 [原生]' , silent = true})
-vim.keymap.set('n', '<leader>h', '<C-w>l', { desc = ' 移动到左方窗口 [原生]' , silent = true})
-vim.keymap.set('n', '<leader>l', '<C-w>l', { desc = ' 移动到右方窗口 [原生]' , silent = true})

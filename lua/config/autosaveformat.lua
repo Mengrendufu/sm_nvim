@@ -7,6 +7,7 @@ vim.opt.fixeol = true
 
 -- 自动识别顺序，优先 Unix 格式
 vim.opt.fileformats = "unix,dos,mac"
+vim.opt.fileformat  = "unix"
 
 -- 3. 保存前置处理：格式清洗
 vim.api.nvim_create_autocmd("BufWritePre", {
