@@ -52,6 +52,10 @@ return {
 
             -- 应用配色方案
             vim.cmd.colorscheme("catppuccin")
+
+            vim.api.nvim_set_hl(0, "@lsp.type.comment", { fg = "#bac2de", italic = true, force = true })
+            vim.api.nvim_set_hl(0, "@lsp.type.comment.c", { fg = "#bac2de", italic = true, force = true })
+            vim.api.nvim_set_hl(0, "@lsp.type.comment.cpp", { fg = "#bac2de", italic = true, force = true })
         end,
     },
 }
