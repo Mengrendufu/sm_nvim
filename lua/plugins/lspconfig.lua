@@ -335,4 +335,3 @@ vim.lsp.config('jsonls', {
         lazy = true,
     }
 }
-
