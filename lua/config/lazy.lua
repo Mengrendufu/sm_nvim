@@ -47,6 +47,10 @@ require("lazy").setup({
         notify = false,              -- 不显示更新通知（避免干扰）
     },
 
+    rocks = {
+        enabled = false,
+    },
+
     -- 性能优化
     performance = {
         rtp = {
@@ -68,5 +72,4 @@ require("lazy").setup({
     vim.keymap.set('n', '<leader>L', ':Lazy<CR>',
         { desc = ' 打开 Lazy 插件管理器 [Lazy.nvim]' }),
 
-    print("Lazy is loaded.");
 })

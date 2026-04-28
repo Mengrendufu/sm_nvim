@@ -1,10 +1,28 @@
 -- Leader mapping ============================================================
 vim.g.mapleader = " "        -- "Space" as leader
 vim.g.maplocalleader = "\\"  -- "\"     as local leader
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_python3_provider = 0
+vim.g.loaded_ruby_provider = 0
 if vim.fn.has("win32") == 1 then
     vim.g.python3_host_prog = 'python3.exe'
 else
     vim.g.python3_host_prog = 'python3'
+end
+
+if vim.fn.has("wsl") == 1 then
+    vim.g.clipboard = {
+        name = "WslClipboard",
+        copy = {
+            ["+"] = "/mnt/c/Windows/System32/clip.exe",
+            ["*"] = "/mnt/c/Windows/System32/clip.exe",
+        },
+        paste = {
+            ["+"] = { "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe", "-NoLogo", "-NoProfile", "-Command", "Get-Clipboard" },
+            ["*"] = { "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe", "-NoLogo", "-NoProfile", "-Command", "Get-Clipboard" },
+        },
+        cache_enabled = 0,
+    }
 end
 
 -- Config modules ============================================================
@@ -65,6 +83,7 @@ vim.opt.splitbelow = true          -- 水平分割窗口在下边
 
 vim.opt.updatetime = 333           -- 更新时间（毫秒）
 vim.opt.timeoutlen = 333           -- 按键序列超时时间
+vim.opt.ttimeoutlen = 100          -- 终端按键 escape 超时时间
 
 vim.opt.undofile = true            -- 启用持久化撤销
 vim.opt.clipboard = "unnamedplus"  -- 使用系统剪贴板

@@ -17,18 +17,11 @@ return {
                 -- 核心语言
                 "c", "cpp", "lua", "vim", "vimdoc", "query",
                 -- 脚本语言
-                "python", "javascript", "typescript", "bash",
+                "javascript", "typescript", "tsx", "bash",
                 -- Web开发
-                "html", "css", "scss", "json", "yaml", "toml",
+                "json", "toml",
                 -- 系统编程
-                "rust", "go", "java", "c_sharp",
-                -- 标记语言
-                "markdown", "markdown_inline",
-                -- "latex",
-                -- 配置文件
-                "dockerfile", "make", "cmake",
-                -- 其他常用
-                "sql", "regex", "comment"
+                "rust",
             },
 
             -- 安装选项
