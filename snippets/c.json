@@ -53,5 +53,16 @@
             "$0"
         ],
         "description": "Generate Sm_Hsm State boilerplate"
+    },
+    "qloop": {
+        "prefix": "qloop",
+        "body": [
+            "for (;;) {",
+            "    // base case ---------------------------------------------------------",
+            "    // gen ---------------------------------------------------------------",
+            "    // iter --------------------------------------------------------------",
+            "}"
+        ],
+        "description": "Generate Sm_Hsm State boilerplate"
     }
 }
