@@ -17,9 +17,12 @@
       {
         "language": "jsonc",
         "path": "./jsonc.json"
+      },
+      {
+        "language": "typescript",
+        "path": "./typescript.json"
       }
     ]
   }
 }
-
 

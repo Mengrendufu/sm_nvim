@@ -48,4 +48,17 @@ return {
         })
         end,
     },
+
+    -- Mason 管理非 LSP 工具（formatter/linter/CLI）
+    {
+        "WhoIsSethDaniel/mason-tool-installer.nvim",
+        dependencies = { "williamboman/mason.nvim" },
+        config = function()
+        require("mason-tool-installer").setup({
+            ensure_installed = {
+            "jq",
+            },
+        })
+        end,
+    },
 }

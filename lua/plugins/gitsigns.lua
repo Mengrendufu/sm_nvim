@@ -4,7 +4,8 @@ return {
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPre", "BufNewFile" }, -- 延迟加载，提高启动速度
     opts = {
-        watch_gitdir = { interval = 1000, follow_files = true },
+        watch_gitdir = { enable = true, follow_files = true },
+        attach_to_untracked = true,
 
         -- 自定义图标，与你的 Neo-tree 风格保持一致
         signs = {
@@ -30,7 +31,7 @@ return {
         },
 
         -- 确保在索引改变时立即更新
-        update_debounce = 100, -- 防抖时间调低，提高响应速度
+        update_debounce = 25, -- 更快响应外部 git/index 变化
 
         -- 绑定一些常用的 Git 快捷键
         on_attach = function(bufnr)

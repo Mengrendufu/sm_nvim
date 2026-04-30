@@ -103,6 +103,32 @@ vim.opt.autoread = true
 local uv = vim.uv or vim.loop
 local watchers = {} -- 用于存储每个 buffer 的监听器
 
+local function notify_lsp_external_change(bufnr, path)
+    if path == "" then
+        return
+    end
+
+    local uri = vim.uri_from_fname(path)
+    for _, client in ipairs(vim.lsp.get_clients({ bufnr = bufnr })) do
+        if client:supports_method("workspace/didChangeWatchedFiles") then
+            client:notify("workspace/didChangeWatchedFiles", {
+                changes = {
+                    {
+                        uri = uri,
+                        type = 2, -- Changed
+                    },
+                },
+            })
+        end
+
+        if client:supports_method("textDocument/didSave") then
+            client:notify("textDocument/didSave", {
+                textDocument = { uri = uri },
+            })
+        end
+    end
+end
+
 local function stop_watcher(bufnr)
     if watchers[bufnr] then
         watchers[bufnr]:stop()
@@ -146,6 +172,16 @@ local watch_grp = vim.api.nvim_create_augroup("AiderStyleWatcher", { clear = tru
 vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost" }, {
     group = watch_grp,
     callback = function(args) start_watcher(args.buf) end,
+})
+
+vim.api.nvim_create_autocmd("FileChangedShellPost", {
+    group = watch_grp,
+    callback = function(args)
+        local path = vim.api.nvim_buf_get_name(args.buf)
+        notify_lsp_external_change(args.buf, path)
+        pcall(function() require("gitsigns").refresh(args.buf) end)
+        start_watcher(args.buf)
+    end,
 })
 
 vim.api.nvim_create_autocmd("BufDelete", {
