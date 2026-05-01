@@ -17,6 +17,21 @@ return {
             vim.g.loaded_netrw = 1
             vim.g.loaded_netrwPlugin = 1
 
+            local git_refresh_timer = nil
+            local function refresh_git_views()
+                if git_refresh_timer then
+                    git_refresh_timer:stop()
+                else
+                    git_refresh_timer = assert((vim.uv or vim.loop).new_timer())
+                end
+
+                git_refresh_timer:start(100, 0, vim.schedule_wrap(function()
+                    pcall(function() require("gitsigns").refresh() end)
+                    pcall(function() require("neo-tree.sources.manager").refresh("filesystem") end)
+                    pcall(function() require("neo-tree.sources.manager").refresh("git_status") end)
+                end))
+            end
+
             -- ========================================
             -- PWD 辅助函数
             -- ========================================
@@ -291,11 +306,7 @@ return {
                 event_handlers = {
                     {
                         event = "git_event",
-                        handler = function()
-                            pcall(function() require("gitsigns").refresh() end)
-                            pcall(function() require("neo-tree.sources.manager").refresh("filesystem") end)
-                            pcall(function() require("neo-tree.sources.manager").refresh("git_status") end)
-                        end,
+                        handler = refresh_git_views,
                     },
                     {
                         event = "neo_tree_buffer_enter",
@@ -354,6 +365,24 @@ return {
                         vim.opt_local.relativenumber = true
                     end
                 end,
+            })
+
+            vim.api.nvim_create_autocmd({
+                "BufEnter",
+                "BufWritePost",
+                "CursorHold",
+                "FileChangedShellPost",
+                "FocusGained",
+                "ShellCmdPost",
+            }, {
+                group = neotree_group,
+                callback = refresh_git_views,
+            })
+
+            vim.api.nvim_create_autocmd("User", {
+                group = neotree_group,
+                pattern = "FugitiveChanged",
+                callback = refresh_git_views,
             })
 
             -- 快捷键映射
