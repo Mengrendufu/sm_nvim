@@ -2,7 +2,7 @@
 -- lua/plugins/gitsigns.lua
 return {
     "lewis6991/gitsigns.nvim",
-    event = { "BufReadPre", "BufNewFile" }, -- 延迟加载，提高启动速度
+    lazy = false,
     opts = {
         watch_gitdir = { enable = true, follow_files = true },
         attach_to_untracked = true,

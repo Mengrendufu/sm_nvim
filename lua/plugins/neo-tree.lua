@@ -290,6 +290,14 @@ return {
                 -- ========================================
                 event_handlers = {
                     {
+                        event = "git_event",
+                        handler = function()
+                            pcall(function() require("gitsigns").refresh() end)
+                            pcall(function() require("neo-tree.sources.manager").refresh("filesystem") end)
+                            pcall(function() require("neo-tree.sources.manager").refresh("git_status") end)
+                        end,
+                    },
+                    {
                         event = "neo_tree_buffer_enter",
                         handler = function()
                             -- 当进入 Neo-tree 缓冲区时设置行号
