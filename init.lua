@@ -18,8 +18,8 @@ if vim.fn.has("wsl") == 1 then
             ["*"] = "/mnt/c/Windows/System32/clip.exe",
         },
         paste = {
-            ["+"] = { "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe", "-NoLogo", "-NoProfile", "-Command", "Get-Clipboard" },
-            ["*"] = { "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe", "-NoLogo", "-NoProfile", "-Command", "Get-Clipboard" },
+            ["+"] = { "/home/sunnymatato/.local/bin/wsl_paste" },
+            ["*"] = { "/home/sunnymatato/.local/bin/wsl_paste" },
         },
         cache_enabled = 0,
     }
