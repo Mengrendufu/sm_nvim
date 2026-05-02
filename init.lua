@@ -146,11 +146,10 @@ local function start_gitdir_poll()
             end
         end
         if changed then
-            -- 触发 gitsigns 的 on_reload → invalidate → refresh
-            local cur = vim.api.nvim_get_current_buf()
-            if vim.api.nvim_buf_is_valid(cur) and vim.bo[cur].buftype == "" then
-                if not vim.bo[cur].modified then
-                    vim.api.nvim_buf_call(cur, function()
+            -- 遍历所有 buffer 触发 gitsigns on_reload
+            for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+                if vim.api.nvim_buf_is_valid(bufnr) and vim.bo[bufnr].buftype == "" and not vim.bo[bufnr].modified then
+                    vim.api.nvim_buf_call(bufnr, function()
                         pcall(vim.cmd, "silent! edit")
                     end)
                 end
