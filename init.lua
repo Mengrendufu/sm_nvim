@@ -103,6 +103,64 @@ vim.opt.autoread = true
 local uv = vim.uv or vim.loop
 local watchers = {} -- 用于存储每个 buffer 的监听器
 
+local gitdir_poll_timer = nil
+local git_mtimes = {}
+local gitdir_poll_path = nil
+local function start_gitdir_poll()
+    local gitdir = vim.fn.finddir(".git", vim.fn.getcwd() .. ";")
+    if gitdir == "" then
+        return
+    end
+
+    gitdir = vim.fn.fnamemodify(gitdir, ":p")
+
+    -- 同一个 .git 不重建 timer，防止丢失 mtime 快照
+    if gitdir == gitdir_poll_path then
+        return
+    end
+
+    if gitdir_poll_timer then
+        gitdir_poll_timer:stop()
+    end
+
+    gitdir_poll_path = gitdir
+    git_mtimes = {}
+
+    local watch_files = {
+        gitdir .. "index",
+        gitdir .. "HEAD",
+        gitdir .. "refs",
+    }
+
+    gitdir_poll_timer = uv.new_timer()
+    gitdir_poll_timer:start(0, 2000, vim.schedule_wrap(function()
+        local changed = false
+        for _, f in ipairs(watch_files) do
+            local stat = uv.fs_stat(f)
+            if stat then
+                local mt = stat.mtime
+                if git_mtimes[f] and (mt.sec ~= git_mtimes[f].sec or mt.nsec ~= git_mtimes[f].nsec) then
+                    changed = true
+                end
+                git_mtimes[f] = { sec = mt.sec, nsec = mt.nsec }
+            end
+        end
+        if changed then
+            -- 触发 gitsigns 的 on_reload → invalidate → refresh
+            local cur = vim.api.nvim_get_current_buf()
+            if vim.api.nvim_buf_is_valid(cur) and vim.bo[cur].buftype == "" then
+                if not vim.bo[cur].modified then
+                    vim.api.nvim_buf_call(cur, function()
+                        pcall(vim.cmd, "silent! edit")
+                    end)
+                end
+            end
+            -- 刷新 Neo-tree filesystem 视图
+            pcall(function() require("neo-tree.sources.manager").refresh("filesystem") end)
+        end
+    end))
+end
+
 local function notify_lsp_external_change(bufnr, path)
     if path == "" then
         return
@@ -160,8 +218,6 @@ local function start_watcher(bufnr)
                 vim.api.nvim_buf_call(bufnr, function()
                     vim.cmd("silent! checktime")
                 end)
-                -- 联动刷新 gitsigns
-                pcall(function() require("gitsigns").refresh(bufnr) end)
             end
         end))
     end
@@ -179,7 +235,6 @@ vim.api.nvim_create_autocmd("FileChangedShellPost", {
     callback = function(args)
         local path = vim.api.nvim_buf_get_name(args.buf)
         notify_lsp_external_change(args.buf, path)
-        pcall(function() require("gitsigns").refresh(args.buf) end)
         start_watcher(args.buf)
     end,
 })
@@ -187,4 +242,9 @@ vim.api.nvim_create_autocmd("FileChangedShellPost", {
 vim.api.nvim_create_autocmd("BufDelete", {
     group = watch_grp,
     callback = function(args) stop_watcher(args.buf) end,
+})
+
+vim.api.nvim_create_autocmd("BufEnter", {
+    group = watch_grp,
+    callback = start_gitdir_poll,
 })

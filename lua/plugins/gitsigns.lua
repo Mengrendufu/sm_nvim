@@ -2,7 +2,7 @@
 -- lua/plugins/gitsigns.lua
 return {
     "lewis6991/gitsigns.nvim",
-    lazy = false,
+    event = { "BufReadPre", "BufNewFile" },
     opts = {
         watch_gitdir = { enable = true, follow_files = true },
         attach_to_untracked = true,
@@ -31,7 +31,7 @@ return {
         },
 
         -- 确保在索引改变时立即更新
-        update_debounce = 25, -- 更快响应外部 git/index 变化
+        update_debounce = 100,
 
         -- 绑定一些常用的 Git 快捷键
         on_attach = function(bufnr)
