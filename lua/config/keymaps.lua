@@ -45,7 +45,7 @@ vim.keymap.set('n', '<leader>es', Substitute, { desc = '交互式全局替换当
 vim.keymap.set('v', '<leader>es', SubstituteVisual, { desc = '交互式全局替换选中内容' })
 
 -- 快速保存
-vim.keymap.set('n', '<leader>fs', ':w<CR>', { desc = '保存文件', silent = true })
+vim.keymap.set('n', '<leader>fs', ':wa<CR>', { desc = '保存所有文件', silent = true })
 
 -- Fast quit.
 vim.keymap.set('n', '<leader>q', ':q<CR>', { desc = ' 退出 [原生]' , silent = true})
